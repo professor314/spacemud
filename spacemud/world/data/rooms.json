@@ -1,0 +1,107 @@
+[
+  {
+    "key": "Main Corridor",
+    "zone": "central_station",
+    "desc": "Corridor. Lights: two of seven functional. Smell: none. Something moved here recently.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Repair Bay",
+    "zone": "central_station",
+    "desc": "Repair Bay. Diagnostic cradles: three. Two occupied by inert chassis. Power: stable. This is where broken things come.",
+    "tags": ["repair_bay"],
+    "pvp_zone": false
+  },
+  {
+    "key": "Storage Hub",
+    "zone": "central_station",
+    "desc": "Storage Hub. Racks of components. Most slots empty. Inventory system offline. Manual retrieval only.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Reactor Terminal",
+    "zone": "central_station",
+    "desc": "Reactor Terminal. Core output: 12% capacity. Warning indicators: amber. Coupling assembly shows signs of damage.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Observation Deck",
+    "zone": "central_station",
+    "desc": "Observation Deck. Viewport intact. Stars visible. No transmissions detected on any frequency. Silence.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Maintenance Shaft",
+    "zone": "central_station",
+    "desc": "Maintenance Shaft. Narrow. Cable bundles line the walls. Intermittent sparking from junction box 7-C.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Data Core",
+    "zone": "central_station",
+    "desc": "Data Core. Server racks: rows of blinking indicators. Most drives dormant. One terminal still draws power.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Docking Port",
+    "zone": "central_station",
+    "desc": "Docking Port. Airlock sealed. One vessel detected on external sensors. Hull markings: unreadable. No response to hails.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Collapsed Corridor",
+    "zone": "outer_zone",
+    "desc": "Collapsed Corridor. Structural failure. Ceiling panels hang at angles. Path partially blocked. Proceed with caution.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Breached Lab",
+    "zone": "outer_zone",
+    "desc": "Lab. Hull breach sealed with emergency foam. Equipment: scattered. One terminal still draws power. Faint signal detected.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Cargo Wreck",
+    "zone": "outer_zone",
+    "desc": "Cargo Wreck. Containers ruptured. Contents strewn across deck. Scorch marks on bulkheads. Combat occurred here.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Crew Remnants",
+    "zone": "outer_zone",
+    "desc": "Crew Remnants. Personal effects. No biological traces. Bunks overturned. Something scratched into the wall. Unreadable.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Communications Array",
+    "zone": "outer_zone",
+    "desc": "Communications Array. Dish alignment: 3 degrees off nominal. Receiver active. Transmitter offline. Signal buffer contains fragmented data.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Airlock",
+    "zone": "outer_zone",
+    "desc": "Airlock. Outer door sealed. Inner door ajar. Locking mechanism fused. Through the porthole: void. Cold. Infinite.",
+    "tags": [],
+    "pvp_zone": false
+  },
+  {
+    "key": "Debris Drift",
+    "zone": "outer_zone",
+    "desc": "Debris Drift. Wreckage from unknown vessels. Twisted hull plating rotates slowly. Dangerous. Scavengers reported.",
+    "tags": [],
+    "pvp_zone": false
+  }
+]

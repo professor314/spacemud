@@ -1,0 +1,24 @@
+[
+  {
+    "key": "Emergency Lighting",
+    "location": "Main Corridor",
+    "repair_level_required": 1,
+    "repair_cost": {"Power Cell": 1},
+    "power_cost": 0,
+    "on_repair_message": "Emergency lighting restored. Corridor visibility: improved.",
+    "requires_repaired": null,
+    "desc_damaged": "Emergency Lighting. Status: offline. Repair possible.",
+    "desc_repaired": "Emergency Lighting. Status: online. Corridor illuminated."
+  },
+  {
+    "key": "Reactor Coupling",
+    "location": "Reactor Terminal",
+    "repair_level_required": 2,
+    "repair_cost": {"Power Cell": 2, "Circuit Component": 1},
+    "power_cost": 0,
+    "on_repair_message": "Reactor coupling restored. Core output increasing.",
+    "requires_repaired": null,
+    "desc_damaged": "Reactor Coupling. Status: damaged. Repair level 2 required.",
+    "desc_repaired": "Reactor Coupling. Status: operational. Core output: nominal."
+  }
+]

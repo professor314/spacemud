@@ -1,0 +1,47 @@
+[
+  {
+    "key": "Power Cell",
+    "typeclass": "typeclasses.objects.Artifact",
+    "location": "Storage Hub",
+    "item_type": "component",
+    "equippable": false,
+    "stat_modifiers": {},
+    "desc": "Power Cell. Standard station issue. Charge level: 78%. Compatible with most station systems."
+  },
+  {
+    "key": "Circuit Component",
+    "typeclass": "typeclasses.objects.Artifact",
+    "location": "Cargo Wreck",
+    "item_type": "component",
+    "equippable": false,
+    "stat_modifiers": {},
+    "desc": "Circuit Component. Salvaged from damaged unit. Functional. Minor corrosion on contact points."
+  },
+  {
+    "key": "Data Chip",
+    "typeclass": "typeclasses.objects.Artifact",
+    "location": "Data Core",
+    "item_type": "quest",
+    "equippable": false,
+    "stat_modifiers": {},
+    "desc": "Data Chip. Encrypted. Contains fragmented station logs. Decryption: not possible with current processing level."
+  },
+  {
+    "key": "Reinforced Plating",
+    "typeclass": "typeclasses.objects.Equipment",
+    "location": "Cargo Wreck",
+    "item_type": "component",
+    "equippable": true,
+    "stat_modifiers": {"shielding": 5},
+    "desc": "Reinforced Plating. Composite alloy. Impact resistance: high. Compatible with standard chassis mounting points."
+  },
+  {
+    "key": "Overclocked Processor",
+    "typeclass": "typeclasses.objects.Equipment",
+    "location": "Breached Lab",
+    "item_type": "component",
+    "equippable": true,
+    "stat_modifiers": {"processing": 6},
+    "desc": "Overclocked Processor. Clock speed: 140% of standard. Thermal output: elevated. Handle with care."
+  }
+]

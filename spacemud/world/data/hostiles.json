@@ -1,0 +1,41 @@
+[
+  {
+    "key": "Corrupted Sentry",
+    "location": "Cargo Wreck",
+    "integrity": 60,
+    "max_integrity": 60,
+    "processing": 12,
+    "shielding": 4,
+    "xp_reward": 75,
+    "credits_reward": 25,
+    "respawn_delay": 120,
+    "salvage_items": ["typeclasses.objects.Artifact"],
+    "desc": "Corrupted Sentry. Security model. Optics: red. Behaviour: erratic. Targeting system: active. Hostile."
+  },
+  {
+    "key": "Haywire Drone",
+    "location": "Breached Lab",
+    "integrity": 40,
+    "max_integrity": 40,
+    "processing": 8,
+    "shielding": 6,
+    "xp_reward": 50,
+    "credits_reward": 15,
+    "respawn_delay": 90,
+    "salvage_items": [],
+    "desc": "Haywire Drone. Aerial unit. Flight pattern: unstable. Emitting high-frequency noise. Approach not recommended."
+  },
+  {
+    "key": "Rogue Program",
+    "location": "Debris Drift",
+    "integrity": 50,
+    "max_integrity": 50,
+    "processing": 15,
+    "shielding": 2,
+    "xp_reward": 100,
+    "credits_reward": 30,
+    "respawn_delay": 150,
+    "salvage_items": [],
+    "desc": "Rogue Program. No physical chassis. Manifests through station systems. Processing output: dangerous. Origin: unknown."
+  }
+]

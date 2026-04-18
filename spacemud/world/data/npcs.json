@@ -1,0 +1,42 @@
+[
+  {
+    "key": "Maintenance Unit 7",
+    "location": "Main Corridor",
+    "role": "mission_giver",
+    "dialogue": "Unit 7. Maintenance protocol. Station systems: critical. Assistance required.",
+    "missions_offered": ["boot_sequence", "signal_search"],
+    "desc": "Maintenance Unit 7. Chassis: industrial model. Left arm: non-functional. Optical sensor: flickering. Still operational. Barely."
+  },
+  {
+    "key": "Damaged Scout",
+    "location": "Docking Port",
+    "role": "mission_giver",
+    "dialogue": "Scout unit. Chassis compromised. Need components. Can trade information.",
+    "missions_offered": ["salvage_run"],
+    "desc": "Damaged Scout. Light reconnaissance model. Hull breaches: multiple. Locomotion: impaired. Transmitting distress signal on loop."
+  },
+  {
+    "key": "Idle Terminal",
+    "location": "Data Core",
+    "role": "ambient",
+    "dialogue": "[FRAGMENT] ...crew evacuation complete. All biological units departed. Automated systems: persist. Purpose: unclear.",
+    "missions_offered": [],
+    "desc": "Idle Terminal. Screen: dim. Cursor blinking. Awaiting input that will never come. Or will it."
+  },
+  {
+    "key": "Chassis Terminal",
+    "location": "Repair Bay",
+    "role": "chassis_terminal",
+    "dialogue": "Chassis bay. Compatible frames detected. Select chassis for installation.",
+    "missions_offered": [],
+    "desc": "Chassis Terminal. Industrial fabrication unit. Five compatible frames available. Awaiting selection."
+  },
+  {
+    "key": "Protocol Terminal",
+    "location": "Data Core",
+    "role": "protocol_terminal",
+    "dialogue": "Protocol installation interface. Operational specializations available. Requirements: chassis installed, level 3.",
+    "missions_offered": [],
+    "desc": "Protocol Terminal. Software upload station. Four operational protocols available. Awaiting qualified unit."
+  }
+]
