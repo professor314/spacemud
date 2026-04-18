@@ -142,7 +142,7 @@ If your code is in a Git repository:
 ```bash
 # On the server
 cd ~
-git clone YOUR_REPO_URL
+git clone https://github.com/professor314/spacemud.git
 cd spacemud
 ```
 

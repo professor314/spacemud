@@ -82,6 +82,9 @@ class Hostile(DefaultObject):
         self.db.salvage_items = []         # list of artifact typeclass paths to spawn on death
         self.db.home_location = None       # dbref of home room
         self.db.respawn_delay = 300        # seconds
+        self.db.chassis = None             # for passive checks in combat
+        # Hostiles cannot be picked up
+        self.locks.add("get:false()")
 
     def at_death(self, killer):
         """Called when integrity reaches 0. Spawns salvage, fires hostile_destroyed event."""
@@ -108,10 +111,12 @@ class NPC(DefaultObject):
     """
 
     def at_object_creation(self):
-        self.db.role = "ambient"           # ambient | mission_giver | vendor
+        self.db.role = "ambient"           # ambient | mission_giver | vendor | chassis_terminal | protocol_terminal
         self.db.home_location = None
         self.db.dialogue = ""              # shown when unit talks to them
         self.db.missions_offered = []      # list of mission_ids
+        # NPCs cannot be picked up
+        self.locks.add("get:false()")
 
     def at_talk(self, character):
         """Called by the talk command."""
@@ -136,3 +141,5 @@ class RepairableObject(DefaultObject):
         self.db.requires_repaired = None   # key name of prerequisite RepairableObject
         self.db.desc_damaged = ""          # room description when damaged
         self.db.desc_repaired = ""         # room description when repaired
+        # Repairable objects cannot be picked up
+        self.locks.add("get:false()")

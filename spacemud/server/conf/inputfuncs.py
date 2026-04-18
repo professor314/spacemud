@@ -10,43 +10,26 @@ This module is loaded by being included in the
 All *global functions* included in this module are considered
 input-handler functions and can be called by the client to handle
 input.
-
-An input function must have the following call signature:
-
-    cmdname(session, *args, **kwargs)
-
-Where session will be the active session and *args, **kwargs are extra
-incoming arguments and keyword properties.
-
-A special command is the "default" command, which is will be called
-when no other cmdname matches. It also receives the non-found cmdname
-as argument.
-
-    default(session, cmdname, *args, **kwargs)
-
 """
 
-# def oob_echo(session, *args, **kwargs):
-#     """
-#     Example echo function. Echoes args, kwargs sent to it.
-#
-#     Args:
-#         session (Session): The Session to receive the echo.
-#         args (list of str): Echo text.
-#         kwargs (dict of str, optional): Keyed echo text
-#
-#     """
-#     session.msg(oob=("echo", args, kwargs))
-#
-#
-# def default(session, cmdname, *args, **kwargs):
-#     """
-#     Handles commands without a matching inputhandler func.
-#
-#     Args:
-#         session (Session): The active Session.
-#         cmdname (str): The (unmatched) command name
-#         args, kwargs (any): Arguments to function.
-#
-#     """
-#     pass
+
+def text(session, *args, **kwargs):
+    """
+    Main text input handler. Called for every line of text input.
+    Echoes the command back to the player before processing it.
+
+    Args:
+        session (Session): The active session.
+        *args: Text input arguments.
+        **kwargs: Additional keyword arguments.
+    """
+    # Get the raw text input
+    text_input = args[0] if args else ""
+
+    if text_input and text_input.strip():
+        # Echo the command back to the player
+        session.msg(f"|w> {text_input.strip()}|n")
+
+    # Pass to Evennia's default text handler
+    from evennia.server.inputfuncs import text as default_text
+    default_text(session, *args, **kwargs)

@@ -105,6 +105,7 @@ class StationRoom(DefaultRoom):
         # Categorise contents (excluding exits and the looker)
         players = []
         hostiles = []
+        npcs = []
         items = []
         repairables = []
 
@@ -118,11 +119,13 @@ class StationRoom(DefaultRoom):
                 hostiles.append(obj)
             elif inherits_from(obj, "typeclasses.objects.RepairableObject"):
                 repairables.append(obj)
+            elif inherits_from(obj, "typeclasses.objects.NPC"):
+                npcs.append(obj)
             elif obj.has_account:
                 # It's a connected player character
                 players.append(obj)
             elif inherits_from(obj, "evennia.objects.objects.DefaultCharacter"):
-                # NPC or offline character — treat as player-like for display
+                # Offline character
                 players.append(obj)
             else:
                 items.append(obj)
@@ -131,6 +134,11 @@ class StationRoom(DefaultRoom):
         if players:
             player_names = ", ".join(p.get_display_name(looker) for p in players)
             lines.append(f"|cUnits:|n {player_names}")
+
+        # NPCs present
+        if npcs:
+            npc_names = ", ".join(n.get_display_name(looker) for n in npcs)
+            lines.append(f"|cNPCs:|n {npc_names}")
 
         # Hostiles present
         if hostiles:
