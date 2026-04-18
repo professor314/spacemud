@@ -31,9 +31,16 @@ def at_server_start():
     how it was shut down.
     """
     from utils.events import on
-    from utils.missions import on_hostile_destroyed, on_artifact_collected
+    from utils.missions import (
+        on_hostile_destroyed,
+        on_artifact_collected,
+        on_repair_completed,
+        on_unit_enters_room,
+    )
     on("hostile_destroyed", on_hostile_destroyed)
     on("artifact_collected", on_artifact_collected)
+    on("repair_completed", on_repair_completed)
+    on("unit_enters_room", on_unit_enters_room)
 
 
 def at_server_stop():

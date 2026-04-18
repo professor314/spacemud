@@ -102,6 +102,6 @@
     "zone": "outer_zone",
     "desc": "Debris Drift. Wreckage from unknown vessels. Twisted hull plating rotates slowly. Dangerous. Scavengers reported.",
     "tags": [],
-    "pvp_zone": false
+    "pvp_zone": true
   }
 ]

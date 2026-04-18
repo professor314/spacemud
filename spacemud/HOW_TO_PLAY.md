@@ -160,6 +160,20 @@ Type `flee` to disengage and move to a random adjacent room.
 4. Return to Damaged Scout and `complete Salvage Run`
 5. Reward: 150 XP, 75 credits
 
+### Station Restore
+1. `talk Maintenance Unit 7` (Main Corridor)
+2. `accept station_restore`
+3. Repair any 2 damaged station systems
+4. Return to Maintenance Unit 7 and `complete Station Restore`
+5. Reward: 250 XP, 125 credits
+
+### Clear the Wreck
+1. `talk Damaged Scout` (Docking Port)
+2. `accept clear_the_wreck`
+3. Destroy 2 Corrupted Sentries and 1 Rogue Program in the Outer Zone
+4. Return to Damaged Scout and `complete Clear the Wreck`
+5. Reward: 300 XP, 150 credits
+
 ---
 
 ## Repairing the Station
@@ -174,13 +188,131 @@ Requirements:
 - Your **repair level** must meet or exceed the object's required level
 - You must have the required **components** in your inventory (consumed on repair)
 - Some repairs cost **power** instead of components (software repairs)
+- Some repairs require other repairs first — check the Prerequisite column. If the prerequisite is not repaired, the repair is blocked.
 
-### Repairable Objects (Phase 1)
+### Repairable Objects
 
-| Object | Location | Repair Level | Cost |
+| Object | Location | Repair Level | Cost | Prerequisite |
+|---|---|---|---|---|
+| Emergency Lighting | Main Corridor | 1 | 1x Power Cell | — |
+| Reactor Coupling | Reactor Terminal | 2 | 2x Power Cell + 1x Circuit Component | — |
+| Sensor Array | Observation Deck | 2 | 1x Circuit Component | Emergency Lighting |
+| Airlock Seal | Airlock | 3 | 2x Circuit Component + 1x Power Cell | — |
+| Communications Relay | Communications Array | 3 | 1x Data Chip + 2x Circuit Component | Sensor Array |
+
+---
+
+## Chassis System
+
+Chassis Terminal located in Repair Bay. Approach it and select your frame. One-time selection. No take-backs.
+
+```
+select <chassis>
+```
+
+View your current chassis:
+
+```
+chassis
+```
+
+If no chassis installed, output reads: `bare circuit board`.
+
+### Available Chassis
+
+| Chassis | Stat Modifiers | Passive |
+|---|---|---|
+| **Scout Unit** | processing +3, shielding -1, max_power +10 | `enhanced_sensors` — sensor range extended. Room scan shows exits of adjacent rooms. |
+| **Heavy Unit** | max_integrity +30, shielding +3, processing -2 | `damage_reduction` — physical damage reduced by 2 per hit (minimum 1). |
+| **Repair Unit** | repair_level +2, max_integrity +10 | `self_repair` — regenerates 1 integrity per minute when not in combat. |
+| **Infiltrator Unit** | processing +2, max_power +15 | `reduced_detection` — hostile entities are less likely to notice you. |
+| **Broadcast Unit** | max_power +10, max_integrity +10 | `cross_zone_comms` — can transmit messages to other units in any zone. |
+
+---
+
+## Professions System
+
+Protocol Terminal located in Data Core. Requires chassis installed and level 3 or higher. One-time selection.
+
+```
+select <profession>
+```
+
+View your current profession:
+
+```
+profession
+```
+
+If no profession installed, output reads: `No protocol installed.`
+
+### Available Professions
+
+| Profession | Growth per Level | Skills |
+|---|---|---|
+| **Combat Protocol** | integrity +5, processing +2, shielding +1, power +3 | `upload_virus` (level 3), `overclock` (level 5) |
+| **Systems Engineer** | integrity +8, processing +1, shielding +1, repair_level +1, power +5 | `emergency_patch` (level 3), `diagnostic_scan` (level 5) |
+| **Infiltration Protocol** | integrity +5, processing +1, shielding +1, power +8 | `hack_console` (level 3), `stealth_mode` (level 5) |
+| **Broadcast Protocol** | integrity +7, processing +1, shielding +1, power +6 | `signal_boost` (level 3), `power_surge` (level 5) |
+
+---
+
+## Skills
+
+Activate a skill:
+
+```
+use <skill>
+```
+
+List available skills and cooldown status:
+
+```
+skills
+```
+
+Skills cost power. Skills have cooldowns. Insufficient power or active cooldown = rejected.
+
+### Generic Skills (all units)
+
+| Skill | Power Cost | Cooldown | Effect |
 |---|---|---|---|
-| Emergency Lighting | Main Corridor | 1 | 1x Power Cell |
-| Reactor Coupling | Reactor Terminal | 2 | 2x Power Cell + 1x Circuit Component |
+| `quick_scan` | 10 | 30s | Next attack deals +5 damage. |
+| `emergency_reboot` | 15 | 60s | Restore 20 integrity. Out of combat only. |
+
+Profession skills unlock at specific levels (see Professions table above). Only available if your profession grants them.
+
+---
+
+## PVP
+
+Debris Drift is a PVP zone. Player-versus-player combat enabled there only.
+
+```
+attack <player>
+```
+
+Outside PVP zones: `Combat protocol restricted in this zone.`
+
+On PVP death: emergency reboot to Repair Bay at 25% integrity. 10% XP penalty applied. No inventory transfer.
+
+---
+
+## Unit States
+
+Your unit has an operational state. It affects what commands are available.
+
+| State | How it triggers | Restrictions |
+|---|---|---|
+| **active** | Default state. Any command from idle returns here. | None. |
+| **idle** | Type `idle` or `idle <message>`. Broadcasts to room. | None — any command returns you to active. |
+| **combat** | Entering combat via `attack`. | `repair`, `missions`, `complete`, `talk`, `select` blocked. `attack`, `flee`, `use`, `status` allowed. |
+| **offline** | Integrity reaches 0. | All commands blocked except `scan`/`look`/`help`. Transitions to active on reboot to Repair Bay. |
+
+```
+idle
+idle Recharging.
+```
 
 ---
 

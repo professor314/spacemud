@@ -4,7 +4,7 @@
     "location": "Main Corridor",
     "role": "mission_giver",
     "dialogue": "Unit 7. Maintenance protocol. Station systems: critical. Assistance required.",
-    "missions_offered": ["boot_sequence", "signal_search"],
+    "missions_offered": ["boot_sequence", "signal_search", "station_restore"],
     "desc": "Maintenance Unit 7. Chassis: industrial model. Left arm: non-functional. Optical sensor: flickering. Still operational. Barely."
   },
   {
@@ -12,7 +12,7 @@
     "location": "Docking Port",
     "role": "mission_giver",
     "dialogue": "Scout unit. Chassis compromised. Need components. Can trade information.",
-    "missions_offered": ["salvage_run"],
+    "missions_offered": ["salvage_run", "clear_the_wreck"],
     "desc": "Damaged Scout. Light reconnaissance model. Hull breaches: multiple. Locomotion: impaired. Transmitting distress signal on loop."
   },
   {

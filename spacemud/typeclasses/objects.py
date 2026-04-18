@@ -133,5 +133,6 @@ class RepairableObject(DefaultObject):
         self.db.repair_cost = {}           # {"Power Cell": 2, "Circuit Component": 1}
         self.db.power_cost = 0             # power deducted for software-only repairs
         self.db.on_repair_message = ""     # message sent to room when repaired
+        self.db.requires_repaired = None   # key name of prerequisite RepairableObject
         self.db.desc_damaged = ""          # room description when damaged
         self.db.desc_repaired = ""         # room description when repaired

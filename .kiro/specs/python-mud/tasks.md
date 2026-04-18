@@ -56,74 +56,74 @@ Phase 2 builds on the completed Phase 1 foundation. Tasks are grouped by system 
   - [x] 3.7 Write `tests/test_professions.py` — install with chassis + level 3 succeeds, rejected without chassis, rejected below level 3, second install rejected, level-up uses profession growth, skills unlock at correct levels
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5_
 
-- [ ] 4. Skills System
-  - [ ] 4.1 Create `world/skills.py` with `SKILLS` dict defining all skills (2 generic + 8 profession) with power_cost, cooldown, effect type, effect value
+- [x] 4. Skills System
+  - [x] 4.1 Create `world/skills.py` with `SKILLS` dict defining all skills (2 generic + 8 profession) with power_cost, cooldown, effect type, effect value
     - _Requirements: 15.1, 15.5_
-  - [ ] 4.2 Add `db.skill_cooldowns = {}` and `db.bonus_damage = 0` to `RobotCharacter.at_object_creation`
+  - [x] 4.2 Add `db.skill_cooldowns = {}` and `db.bonus_damage = 0` to `RobotCharacter.at_object_creation`
     - _Requirements: 15.6_
-  - [ ] 4.3 Implement `utils/skills.py` with `is_skill_ready`, `set_cooldown`, `remaining_cooldown`, and `apply_skill_effect` functions handling all effect types (direct_damage, heal, bonus_damage, reveal_stats, restore_power, noop)
+  - [x] 4.3 Implement `utils/skills.py` with `is_skill_ready`, `set_cooldown`, `remaining_cooldown`, and `apply_skill_effect` functions handling all effect types (direct_damage, heal, bonus_damage, reveal_stats, restore_power, noop)
     - _Requirements: 15.2, 15.3, 15.4_
-  - [ ] 4.4 Create `commands/skills.py` with `CmdUse` (activate a skill) and `CmdSkills` (list available skills with cooldown status)
+  - [x] 4.4 Create `commands/skills.py` with `CmdUse` (activate a skill) and `CmdSkills` (list available skills with cooldown status)
     - _Requirements: 15.2, 15.3, 15.4_
-  - [ ] 4.5 Update CombatScript to consume `db.bonus_damage` on attacker's next hit
+  - [x] 4.5 Update CombatScript to consume `db.bonus_damage` on attacker's next hit
     - _Requirements: 15.5_
-  - [ ] 4.6 Add `CmdUse`, `CmdSkills` to `RobotCmdSet`
+  - [x] 4.6 Add `CmdUse`, `CmdSkills` to `RobotCmdSet`
     - _Requirements: 15.1_
-  - [ ] 4.7 Write `tests/test_skills.py` — generic skill usable by all, profession skill rejected if not unlocked, cooldown prevents reuse, cooldown expires, insufficient power rejected, direct_damage reduces target integrity, heal restores integrity, bonus_damage consumed on next attack, skills command lists correctly
+  - [x] 4.7 Write `tests/test_skills.py` — generic skill usable by all, profession skill rejected if not unlocked, cooldown prevents reuse, cooldown expires, insufficient power rejected, direct_damage reduces target integrity, heal restores integrity, bonus_damage consumed on next attack, skills command lists correctly
     - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 15.7_
 
-- [ ] 5. Unit State Management
-  - [ ] 5.1 Create `CmdIdle` in `commands/general.py` — sets player_state to "idle", broadcasts message; any subsequent command returns to "active"
+- [x] 5. Unit State Management
+  - [x] 5.1 Create `CmdIdle` in `commands/general.py` — sets player_state to "idle", broadcasts message; any subsequent command returns to "active"
     - _Requirements: 18.1, 18.2, 18.3_
-  - [ ] 5.2 Implement command restriction enforcement — create a `RestrictedCommand` base class or `at_pre_cmd` mixin that checks player_state and blocks restricted commands in combat/offline states
+  - [x] 5.2 Implement command restriction enforcement — create a `RestrictedCommand` base class or `at_pre_cmd` mixin that checks player_state and blocks restricted commands in combat/offline states
     - _Requirements: 18.4, 18.5, 18.6, 18.7_
-  - [ ] 5.3 Apply restriction checks to all existing commands that should be blocked in combat (`repair`, `missions`, `complete`, `talk`, `select`) and offline (everything except `scan`/`look`/`help`)
+  - [x] 5.3 Apply restriction checks to all existing commands that should be blocked in combat (`repair`, `missions`, `complete`, `talk`, `select`) and offline (everything except `scan`/`look`/`help`)
     - _Requirements: 18.6, 18.7_
-  - [ ] 5.4 Add `CmdIdle` to `RobotCmdSet`
+  - [x] 5.4 Add `CmdIdle` to `RobotCmdSet`
     - _Requirements: 18.2_
-  - [ ] 5.5 Write `tests/test_unit_state.py` — idle sets state, any command returns to active, combat blocks restricted commands, combat allows attack/flee/use/status, offline blocks everything except scan, offline→repair bay transitions to active
+  - [x] 5.5 Write `tests/test_unit_state.py` — idle sets state, any command returns to active, combat blocks restricted commands, combat allows attack/flee/use/status, offline blocks everything except scan, offline→repair bay transitions to active
     - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5, 18.6, 18.7, 18.8_
 
-- [ ] 6. PVP Combat
-  - [ ] 6.1 Update `CmdAttack` in `commands/combat.py` to accept player targets in PVP zones; reject with "Combat protocol restricted in this zone." outside PVP zones
+- [x] 6. PVP Combat
+  - [x] 6.1 Update `CmdAttack` in `commands/combat.py` to accept player targets in PVP zones; reject with "Combat protocol restricted in this zone." outside PVP zones
     - _Requirements: 17.1, 17.2, 17.3_
-  - [ ] 6.2 Add `db.pvp_kills = 0` to `RobotCharacter.at_object_creation`
+  - [x] 6.2 Add `db.pvp_kills = 0` to `RobotCharacter.at_object_creation`
     - _Requirements: 17.6_
-  - [ ] 6.3 Update CombatScript to handle PVP death — 10% XP penalty, no inventory transfer, increment winner's `db.pvp_kills`
+  - [x] 6.3 Update CombatScript to handle PVP death — 10% XP penalty, no inventory transfer, increment winner's `db.pvp_kills`
     - _Requirements: 17.4, 17.5, 17.6_
-  - [ ] 6.4 Flag Debris Drift room as `db.pvp_zone = True` in `world/data/rooms.json`
+  - [x] 6.4 Flag Debris Drift room as `db.pvp_zone = True` in `world/data/rooms.json`
     - _Requirements: 17.1_
-  - [ ] 6.5 Write `tests/test_pvp.py` — attack player in PVP zone works, attack player outside PVP zone rejected, PVP death applies XP penalty, no inventory transfer, pvp_kills incremented
+  - [x] 6.5 Write `tests/test_pvp.py` — attack player in PVP zone works, attack player outside PVP zone rejected, PVP death applies XP penalty, no inventory transfer, pvp_kills incremented
     - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5, 17.6_
 
-- [ ] 7. Full Mission System + Extended Repair
-  - [ ] 7.1 Add `on_repair_completed` handler to `utils/missions.py` — iterates in-progress missions, increments matching `repair` objectives
+- [x] 7. Full Mission System + Extended Repair
+  - [x] 7.1 Add `on_repair_completed` handler to `utils/missions.py` — iterates in-progress missions, increments matching `repair` objectives
     - _Requirements: 16.1_
-  - [ ] 7.2 Register `on_repair_completed` handler in `server/conf/at_server_startstop.py`
+  - [x] 7.2 Register `on_repair_completed` handler in `server/conf/at_server_startstop.py`
     - _Requirements: 12.5_
-  - [ ] 7.3 Add `destroy` objective handling to `on_hostile_destroyed` (match hostile name against objective target)
+  - [x] 7.3 Add `destroy` objective handling to `on_hostile_destroyed` (match hostile name against objective target)
     - _Requirements: 16.1_
-  - [ ] 7.4 Add Phase 2 missions to `world/missions.py` — "Station Restore" (repair 2 systems) and "Clear the Wreck" (destroy specific hostiles)
+  - [x] 7.4 Add Phase 2 missions to `world/missions.py` — "Station Restore" (repair 2 systems) and "Clear the Wreck" (destroy specific hostiles)
     - _Requirements: 16.1, 16.2_
-  - [ ] 7.5 Add `db.requires_repaired` attribute to `RepairableObject.at_object_creation`; update `CmdRepair` to check prerequisite before allowing repair
+  - [x] 7.5 Add `db.requires_repaired` attribute to `RepairableObject.at_object_creation`; update `CmdRepair` to check prerequisite before allowing repair
     - _Requirements: 19.3_
-  - [ ] 7.6 Implement zone completion check in `CmdRepair` — after each repair, check if all objects in zone are repaired; fire `zone_fully_repaired` event if so
+  - [x] 7.6 Implement zone completion check in `CmdRepair` — after each repair, check if all objects in zone are repaired; fire `zone_fully_repaired` event if so
     - _Requirements: 19.1, 19.2_
-  - [ ] 7.7 Update `StationRoom.return_appearance` to show `[DAMAGED]`/`[REPAIRED]` tags for RepairableObject instances in the room
+  - [x] 7.7 Update `StationRoom.return_appearance` to show `[DAMAGED]`/`[REPAIRED]` tags for RepairableObject instances in the room
     - _Requirements: 19.4_
-  - [ ] 7.8 Add Phase 2 repairable objects to `world/data/repairables.json` — Sensor Array, Airlock Seal, Communications Relay with repair chains
+  - [x] 7.8 Add Phase 2 repairable objects to `world/data/repairables.json` — Sensor Array, Airlock Seal, Communications Relay with repair chains
     - _Requirements: 19.3_
-  - [ ] 7.9 Extend `tests/test_missions.py` — repair objective increments on repair_completed, destroy objective increments on hostile_destroyed, mixed-objective mission completes correctly
+  - [x] 7.9 Extend `tests/test_missions.py` — repair objective increments on repair_completed, destroy objective increments on hostile_destroyed, mixed-objective mission completes correctly
     - _Requirements: 16.1, 16.6_
-  - [ ] 7.10 Extend `tests/test_repair.py` — repair chain prerequisite enforced, zone completion event fires when last object repaired, scan shows damaged/repaired tags
+  - [x] 7.10 Extend `tests/test_repair.py` — repair chain prerequisite enforced, zone completion event fires when last object repaired, scan shows damaged/repaired tags
     - _Requirements: 19.2, 19.3, 19.4_
 
-- [ ] 8. Final Verification
-  - [ ] 8.1 Run full test suite and fix any failures
-  - [ ] 8.2 Run `validate_world` against JSON-loaded world and confirm 0 errors
-  - [ ] 8.3 Update `HOW_TO_PLAY.md` with Phase 2 content (chassis, professions, skills, PVP, new missions, repair chains)
-  - [ ] 8.4 Update `README.md` paths if folder was renamed
-  - [ ] 8.5 Update `AWS_HOSTING.md` paths if folder was renamed
+- [x] 8. Final Verification
+  - [x] 8.1 Run full test suite and fix any failures
+  - [x] 8.2 Run `validate_world` against JSON-loaded world and confirm 0 errors
+  - [x] 8.3 Update `HOW_TO_PLAY.md` with Phase 2 content (chassis, professions, skills, PVP, new missions, repair chains)
+  - [x] 8.4 Update `README.md` paths if folder was renamed
+  - [x] 8.5 Update `AWS_HOSTING.md` paths if folder was renamed
 
 ## Notes
 

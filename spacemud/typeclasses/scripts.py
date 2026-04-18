@@ -66,7 +66,10 @@ class CombatScript(DefaultScript):
             return
 
         # --- Attacker hits defender ---
-        dmg = max(1, attacker.db.processing - defender.db.shielding + random.randint(-2, 2))
+        bonus = attacker.db.bonus_damage or 0
+        dmg = max(1, attacker.db.processing + bonus - defender.db.shielding + random.randint(-2, 2))
+        if bonus:
+            attacker.db.bonus_damage = 0
         # Heavy chassis passive: damage reduction for defender
         if defender.db.chassis == "heavy":
             dmg = max(1, dmg - 2)
@@ -108,6 +111,14 @@ class CombatScript(DefaultScript):
             # Unit death — transport to Repair Bay
             attacker.db.player_state = "offline"
             attacker.db.integrity = max(1, attacker.db.max_integrity // 4)
+
+            # PVP death handling — if defender is a player character
+            if defender.has_account:
+                xp_penalty = int(attacker.db.experience * 0.1)
+                attacker.db.experience = max(0, attacker.db.experience - xp_penalty)
+                defender.db.pvp_kills = (defender.db.pvp_kills or 0) + 1
+                attacker.msg(f"Destroyed by {defender.name}. XP penalty: -{xp_penalty}.")
+                defender.msg(f"{attacker.name} destroyed. PVP kill recorded.")
 
             repair_bay = self._find_repair_bay()
             if repair_bay:

@@ -20,5 +20,38 @@
     "requires_repaired": null,
     "desc_damaged": "Reactor Coupling. Status: damaged. Repair level 2 required.",
     "desc_repaired": "Reactor Coupling. Status: operational. Core output: nominal."
+  },
+  {
+    "key": "Sensor Array",
+    "location": "Observation Deck",
+    "repair_level_required": 2,
+    "repair_cost": {"Circuit Component": 1},
+    "power_cost": 0,
+    "on_repair_message": "Sensor array online. External scan range: extended.",
+    "requires_repaired": "Emergency Lighting",
+    "desc_damaged": "Sensor Array. Status: offline. Prerequisite: Emergency Lighting.",
+    "desc_repaired": "Sensor Array. Status: online. Scanning."
+  },
+  {
+    "key": "Airlock Seal",
+    "location": "Airlock",
+    "repair_level_required": 3,
+    "repair_cost": {"Circuit Component": 2, "Power Cell": 1},
+    "power_cost": 0,
+    "on_repair_message": "Airlock seal restored. Pressure: normalising.",
+    "requires_repaired": null,
+    "desc_damaged": "Airlock Seal. Status: compromised. Repair level 3 required.",
+    "desc_repaired": "Airlock Seal. Status: sealed. Pressure: nominal."
+  },
+  {
+    "key": "Communications Relay",
+    "location": "Communications Array",
+    "repair_level_required": 3,
+    "repair_cost": {"Data Chip": 1, "Circuit Component": 2},
+    "power_cost": 0,
+    "on_repair_message": "Communications relay online. Signal: transmitting.",
+    "requires_repaired": "Sensor Array",
+    "desc_damaged": "Communications Relay. Status: offline. Prerequisite: Sensor Array.",
+    "desc_repaired": "Communications Relay. Status: online. Broadcasting."
   }
 ]

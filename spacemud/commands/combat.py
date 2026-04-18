@@ -30,16 +30,31 @@ class CmdAttack(Command):
             self.caller.msg("Engage what? Usage: attack <target>")
             return
 
-        target = self.caller.search(self.args.strip(), location=self.caller.location)
-        if not target or not inherits_from(target, "typeclasses.objects.Hostile"):
-            self.caller.msg("No hostile detected by that designation.")
-            return
-
         if self.caller.db.player_state == "combat":
             self.caller.msg("Combat already active.")
             return
 
-        # Start combat script
+        target = self.caller.search(self.args.strip(), location=self.caller.location)
+        if not target:
+            return
+
+        # Check if target is a hostile (PVE)
+        if inherits_from(target, "typeclasses.objects.Hostile"):
+            self._start_combat(target)
+            return
+
+        # Check if target is another player (PVP)
+        if target.has_account and target != self.caller:
+            if not self.caller.location.db.pvp_zone:
+                self.caller.msg("Combat protocol restricted in this zone.")
+                return
+            self._start_combat(target)
+            return
+
+        self.caller.msg("No valid target by that designation.")
+
+    def _start_combat(self, target):
+        """Start a combat script between caller and target."""
         script = create_script(
             "typeclasses.scripts.CombatScript",
             obj=self.caller,

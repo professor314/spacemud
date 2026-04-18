@@ -353,6 +353,57 @@ def on_unit_enters_room(character, room, **kwargs):
             _check_mission_complete(character, mission_id)
 
 
+def on_repair_completed(character, target, **kwargs):
+    """
+    Event handler called when a unit repairs a station object.
+
+    Iterates *character*'s in-progress missions and increments matching repair
+    objectives where objective type == "repair" and target matches the repaired
+    object name (or target == "any" for generic repair objectives).
+    """
+    if not character or not target:
+        return
+
+    log = character.db.mission_log
+    if not log:
+        return
+
+    target_name = target.name if hasattr(target, "name") else str(target)
+
+    for mission_id, entry in log.items():
+        if entry.get("state") != "in_progress":
+            continue
+
+        updated = False
+        for obj in entry.get("objectives", []):
+            if obj.get("type") != "repair":
+                continue
+            obj_target = obj.get("target", "")
+            if obj_target != target_name and obj_target != "any":
+                continue
+            if obj.get("current", 0) >= obj.get("required", 1):
+                continue
+
+            obj["current"] = obj.get("current", 0) + 1
+            updated = True
+
+            current = obj["current"]
+            required = obj["required"]
+            character.msg(
+                f"|yMission progress:|n {_mission_title(mission_id)} — "
+                f"Repaired: {current}/{required}"
+            )
+
+            if current >= required:
+                character.msg(
+                    f"|gObjective complete:|n Repairs ({required}/{required})"
+                )
+
+        if updated:
+            character.db.mission_log = log
+            _check_mission_complete(character, mission_id)
+
+
 def on_deliver(character, item, room, **kwargs):
     """
     Event handler for deliver objectives. Called when a character drops

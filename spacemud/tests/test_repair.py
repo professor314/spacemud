@@ -227,3 +227,76 @@ class TestRepairCommand(EvenniaTest):
         )
 
         repairable.delete()
+
+
+    def test_repair_chain_prerequisite_enforced(self):
+        """Repairing object B before its prerequisite A fails; after A is repaired, B succeeds."""
+        self._setup_char()
+        self.char1.location = self.room1
+
+        # Object A — no prerequisite
+        obj_a = evennia.create_object(
+            "typeclasses.objects.RepairableObject",
+            key="Sensor Array",
+            location=self.room1,
+        )
+        obj_a.db.repaired = False
+        obj_a.db.repair_level_required = 1
+        obj_a.db.repair_cost = {}
+        obj_a.db.power_cost = 0
+        obj_a.db.on_repair_message = "Sensor Array online."
+        obj_a.db.requires_repaired = None
+
+        # Object B — requires Sensor Array repaired first
+        obj_b = evennia.create_object(
+            "typeclasses.objects.RepairableObject",
+            key="Communications Relay",
+            location=self.room1,
+        )
+        obj_b.db.repaired = False
+        obj_b.db.repair_level_required = 1
+        obj_b.db.repair_cost = {}
+        obj_b.db.power_cost = 0
+        obj_b.db.on_repair_message = "Communications Relay online."
+        obj_b.db.requires_repaired = "Sensor Array"
+
+        from commands.general import CmdRepair
+
+        # Try to repair B before A — should fail with prerequisite message
+        messages, original = self._capture_messages(self.char1)
+
+        cmd = CmdRepair()
+        cmd.caller = self.char1
+        cmd.args = "Communications Relay"
+        cmd.session = None
+        cmd.func()
+
+        self.char1.msg = original
+
+        self.assertFalse(obj_b.db.repaired)
+        self.assertTrue(
+            any("Prerequisite not met" in m for m in messages),
+            f"Expected 'Prerequisite not met' message, got: {messages}",
+        )
+
+        # Now repair A
+        cmd2 = CmdRepair()
+        cmd2.caller = self.char1
+        cmd2.args = "Sensor Array"
+        cmd2.session = None
+        cmd2.func()
+
+        self.assertTrue(obj_a.db.repaired)
+
+        # Now repair B — should succeed
+        cmd3 = CmdRepair()
+        cmd3.caller = self.char1
+        cmd3.args = "Communications Relay"
+        cmd3.session = None
+        cmd3.func()
+
+        self.assertTrue(obj_b.db.repaired)
+
+        # Clean up
+        obj_a.delete()
+        obj_b.delete()

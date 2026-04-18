@@ -6,6 +6,7 @@ from evennia.commands.command import Command
 from evennia.utils.utils import inherits_from
 
 from utils.events import fire_event
+from utils.state_checks import check_state
 
 
 class CmdStatus(Command):
@@ -52,6 +53,10 @@ class CmdRepair(Command):
     help_category = "General"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         if not self.args:
             self.caller.msg("Repair what? Usage: repair <object>")
             return
@@ -73,6 +78,15 @@ class CmdRepair(Command):
                 f"Current: {self.caller.db.repair_level}."
             )
             return
+
+        # Check repair chain prerequisite
+        prereq_name = target.db.requires_repaired
+        if prereq_name:
+            import evennia
+            prereq_results = evennia.search_object(prereq_name)
+            if prereq_results and not prereq_results[0].db.repaired:
+                self.caller.msg(f"Prerequisite not met. Repair {prereq_name} first.")
+                return
 
         # Check and consume repair cost (artifacts from inventory)
         cost = target.db.repair_cost or {}
@@ -106,6 +120,23 @@ class CmdRepair(Command):
         msg = target.db.on_repair_message or f"{target.name} repaired."
         self.caller.location.msg_contents(msg)
         fire_event("repair_completed", character=self.caller, target=target)
+
+        # Check zone completion
+        zone = target.location.db.zone if target.location else None
+        if zone:
+            import evennia
+            all_repairable = evennia.search_object(
+                "*", typeclass="typeclasses.objects.RepairableObject"
+            )
+            zone_objects = [
+                obj for obj in all_repairable
+                if obj.location and obj.location.db.zone == zone
+            ]
+            if zone_objects and all(obj.db.repaired for obj in zone_objects):
+                fire_event("zone_fully_repaired", character=self.caller, zone=zone)
+                self.caller.location.msg_contents(
+                    f"Zone {zone.replace('_', ' ').title()}: all systems restored."
+                )
 
 
 class CmdScan(Command):
@@ -217,3 +248,31 @@ class CmdHelp(Command):
             "\nType |whelp <command>|n for detailed help on a specific command."
         )
         self.caller.msg("\n".join(lines))
+
+
+class CmdIdle(Command):
+    """
+    Enter idle mode.
+
+    Usage:
+      idle [message]
+
+    Sets your unit to idle state. Any subsequent command returns to active.
+    """
+    key = "idle"
+    help_category = "General"
+
+    def func(self):
+        if self.caller.db.player_state != "active":
+            self.caller.msg("Cannot enter idle state now.")
+            return
+        msg = self.args.strip() if self.args else ""
+        self.caller.db.player_state = "idle"
+        self.caller.db.idle_message = msg
+        if self.caller.location:
+            self.caller.location.msg_contents(
+                f"{self.caller.name} has entered idle mode." +
+                (f" Message: {msg}" if msg else ""),
+                exclude=self.caller,
+            )
+        self.caller.msg("Idle mode activated." + (f" Message: {msg}" if msg else ""))

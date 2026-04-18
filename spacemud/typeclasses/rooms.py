@@ -106,6 +106,7 @@ class StationRoom(DefaultRoom):
         players = []
         hostiles = []
         items = []
+        repairables = []
 
         for obj in self.contents:
             if obj is looker:
@@ -115,6 +116,8 @@ class StationRoom(DefaultRoom):
                 continue
             if inherits_from(obj, "typeclasses.objects.Hostile"):
                 hostiles.append(obj)
+            elif inherits_from(obj, "typeclasses.objects.RepairableObject"):
+                repairables.append(obj)
             elif obj.has_account:
                 # It's a connected player character
                 players.append(obj)
@@ -133,6 +136,17 @@ class StationRoom(DefaultRoom):
         if hostiles:
             hostile_names = ", ".join(h.get_display_name(looker) for h in hostiles)
             lines.append(f"|rHostiles:|n {hostile_names}")
+
+        # Repairable objects
+        if repairables:
+            for robj in repairables:
+                if robj.db.repaired:
+                    lines.append(f"|g[REPAIRED]|n {robj.get_display_name(looker)}. Operational.")
+                else:
+                    lines.append(
+                        f"|r[DAMAGED]|n {robj.get_display_name(looker)}. "
+                        f"Repair level required: {robj.db.repair_level_required}."
+                    )
 
         # Artifacts present
         if items:

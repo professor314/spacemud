@@ -5,6 +5,8 @@ Mission commands: talk, complete, missions, accept.
 from evennia.commands.command import Command
 from evennia.utils.utils import inherits_from
 
+from utils.state_checks import check_state
+
 
 class CmdTalk(Command):
     """
@@ -21,6 +23,10 @@ class CmdTalk(Command):
     help_category = "Missions"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         if not self.args:
             self.caller.msg("Talk to whom? Usage: talk <npc>")
             return
@@ -48,6 +54,10 @@ class CmdComplete(Command):
     help_category = "Missions"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         if not self.args:
             self.caller.msg("Complete which mission? Usage: complete <mission title>")
             return
@@ -75,6 +85,10 @@ class CmdMissions(Command):
     help_category = "Missions"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         log = self.caller.db.mission_log
         if not log:
             self.caller.msg("Mission log: empty.")
@@ -138,6 +152,10 @@ class CmdAccept(Command):
     help_category = "Missions"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         if not self.args:
             self.caller.msg("Accept which mission? Usage: accept <mission_id>")
             return

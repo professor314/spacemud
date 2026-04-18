@@ -4,6 +4,8 @@ Chassis and profession commands: select, chassis, profession.
 
 from evennia.commands.command import Command
 
+from utils.state_checks import check_state
+
 
 class CmdSelect(Command):
     """
@@ -21,6 +23,10 @@ class CmdSelect(Command):
     help_category = "General"
 
     def func(self):
+        blocked = check_state(self.caller, self.key)
+        if blocked:
+            self.caller.msg(blocked)
+            return
         if not self.args:
             self.caller.msg("Select what? Usage: select <id>")
             return

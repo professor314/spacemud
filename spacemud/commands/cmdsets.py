@@ -11,8 +11,9 @@ from evennia import default_cmds
 from commands.combat import CmdAttack, CmdFlee
 from commands.items import CmdGet, CmdDrop, CmdInventory, CmdEquip
 from commands.missions import CmdTalk, CmdComplete, CmdMissions, CmdAccept
-from commands.general import CmdStatus, CmdRepair, CmdScan, CmdHelp
+from commands.general import CmdStatus, CmdRepair, CmdScan, CmdHelp, CmdIdle
 from commands.chassis import CmdSelect, CmdChassisInfo, CmdProfessionInfo
+from commands.skills import CmdUse, CmdSkills
 
 
 class RobotCmdSet(default_cmds.CharacterCmdSet):
@@ -46,7 +47,11 @@ class RobotCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdRepair())
         self.add(CmdScan())
         self.add(CmdHelp())
+        self.add(CmdIdle())
         # Chassis / Profession
         self.add(CmdSelect())
         self.add(CmdChassisInfo())
         self.add(CmdProfessionInfo())
+        # Skills
+        self.add(CmdUse())
+        self.add(CmdSkills())

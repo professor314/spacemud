@@ -306,3 +306,79 @@ class TestCompleteMission(EvenniaTest):
         )
 
         npc.delete()
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 — repair & destroy objective tests (no Evennia required)
+# ---------------------------------------------------------------------------
+
+
+class _FakeTarget:
+    """Minimal stand-in for a repairable target with a .name attribute."""
+
+    def __init__(self, name):
+        self.name = name
+
+
+def test_repair_objective_increments():
+    """on_repair_completed increments the repair objective count."""
+    from utils.missions import accept_mission, on_repair_completed
+
+    char = _FakeChar()
+    accept_mission(char, "station_restore")
+
+    target = _FakeTarget("Sensor Array")
+    on_repair_completed(character=char, target=target)
+
+    log = char.db.mission_log or {}
+    entry = log.get("station_restore", {})
+    objectives = entry.get("objectives", [])
+    assert objectives[0]["current"] == 1, (
+        f"Expected repair objective current to be 1, got {objectives[0]['current']}"
+    )
+
+
+def test_destroy_objective_increments():
+    """on_hostile_destroyed increments the destroy objective count."""
+    from utils.missions import accept_mission, on_hostile_destroyed
+
+    char = _FakeChar()
+    accept_mission(char, "clear_the_wreck")
+
+    hostile = _FakeItem("Corrupted Sentry")
+    on_hostile_destroyed(killer=char, hostile=hostile)
+
+    log = char.db.mission_log or {}
+    entry = log.get("clear_the_wreck", {})
+    objectives = entry.get("objectives", [])
+    # First objective is destroy Corrupted Sentry (required: 2)
+    assert objectives[0]["current"] == 1, (
+        f"Expected destroy objective current to be 1, got {objectives[0]['current']}"
+    )
+
+
+def test_mixed_objective_mission_completes():
+    """Completing all destroy objectives in clear_the_wreck triggers notification."""
+    from utils.missions import accept_mission, on_hostile_destroyed
+
+    char = _FakeChar()
+    accept_mission(char, "clear_the_wreck")
+
+    # clear_the_wreck has 2 objectives:
+    #   destroy 2x Corrupted Sentry
+    #   destroy 1x Rogue Program
+
+    sentry = _FakeItem("Corrupted Sentry")
+    rogue = _FakeItem("Rogue Program")
+
+    # Complete first objective: 2 sentries
+    on_hostile_destroyed(killer=char, hostile=sentry)
+    on_hostile_destroyed(killer=char, hostile=sentry)
+
+    # Complete second objective: 1 rogue program
+    on_hostile_destroyed(killer=char, hostile=rogue)
+
+    # _check_mission_complete should have sent "all objectives complete" notification
+    assert any("all objectives complete" in m.lower() for m in char._messages), (
+        f"Expected 'all objectives complete' notification, got: {char._messages}"
+    )
