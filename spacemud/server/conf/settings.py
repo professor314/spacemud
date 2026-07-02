@@ -78,3 +78,10 @@ IDLE_TIMEOUT_WARNING = 60
 
 # Message shown when disconnected for idle
 IDLE_DISCONNECT_MSG = "\n|rSession terminated. Unit inactive for 30 minutes.|n\nReconnect with: connect <unit_designation> <access_key>\n"
+
+######################################################################
+# Network — Allow external connections (required for public hosting)
+######################################################################
+TELNET_INTERFACES = ["0.0.0.0"]
+WEBSERVER_INTERFACES = ["0.0.0.0"]
+WEBSOCKET_CLIENT_INTERFACE = "0.0.0.0"
