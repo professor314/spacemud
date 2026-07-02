@@ -65,3 +65,16 @@ CONNECTION_SCREEN_MODULE = "server.conf.connection_screens"
 
 # Robot universe unlogged-in command set (login prompts)
 CMDSET_UNLOGGEDIN = "commands.unloggedin.RobotUnloggedinCmdSet"
+
+######################################################################
+# Session & Idle Settings
+######################################################################
+
+# Kick idle players after 30 minutes (1800 seconds)
+IDLE_TIMEOUT = 1800
+
+# Message shown to the player when they're about to be kicked (60s warning)
+IDLE_TIMEOUT_WARNING = 60
+
+# Message shown when disconnected for idle
+IDLE_DISCONNECT_MSG = "\n|rSession terminated. Unit inactive for 30 minutes.|n\nReconnect with: connect <unit_designation> <access_key>\n"

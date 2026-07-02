@@ -2,63 +2,63 @@
   {
     "key": "Main Corridor",
     "zone": "central_station",
-    "desc": "Corridor. Lights: two of seven functional. Smell: none. Something moved here recently.",
+    "desc": "Corridor. Lights: two of seven functional. Smell: none. Something moved here recently.\n\nA fragmented diagnostic flickers across your display:\n\n  |yMEMORY FRAGMENT:|n Navigation subroutines partially restored.\n  Available commands: |wlook|n (scan surroundings), |wnorth|n / |wsouth|n / |weast|n / |wwest|n (move)\n  Type |whelp|n for full command list.\n\nExits lead in four directions. The station continues.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Repair Bay",
     "zone": "central_station",
-    "desc": "Repair Bay. Diagnostic cradles: three. Two occupied by inert chassis. Power: stable. This is where broken things come.",
+    "desc": "Repair Bay. Diagnostic cradles: three. Two occupied by inert chassis. Power: stable. This is where broken things come.\n\nA terminal glows nearby. Another unit stands motionless beside it — the |wChassis Terminal|n.\n\n  |yMEMORY FRAGMENT:|n Interaction protocol recovered.\n  Use |wtalk <name>|n to interface with station terminals and other units.\n  Try: |wtalk chassis terminal|n",
     "tags": ["repair_bay"],
     "pvp_zone": false
   },
   {
     "key": "Storage Hub",
     "zone": "central_station",
-    "desc": "Storage Hub. Racks of components. Most slots empty. Inventory system offline. Manual retrieval only.",
+    "desc": "Storage Hub. Racks of components. Most slots empty. Inventory system offline. Manual retrieval only.\n\nScattered objects rest on the deck — components left behind by previous units.\n\n  |yMEMORY FRAGMENT:|n Object manipulation subroutines online.\n  |wget <item>|n — acquire an object. |winventory|n — check what you carry.\n  |wequip <item>|n — attach equipment to your frame. |wdrop <item>|n — release.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Reactor Terminal",
     "zone": "central_station",
-    "desc": "Reactor Terminal. Core output: 12% capacity. Warning indicators: amber. Coupling assembly shows signs of damage.",
+    "desc": "Reactor Terminal. Core output: 12% capacity. Warning indicators: amber. Coupling assembly shows signs of damage.\n\nThe reactor coupling is sparking. It could be repaired — if a unit had the right components and skill.\n\n  |yMEMORY FRAGMENT:|n Repair subroutines available.\n  |wrepair <system>|n — attempt to fix a damaged station system.\n  Requires: sufficient repair level + correct components in inventory.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Observation Deck",
     "zone": "central_station",
-    "desc": "Observation Deck. Viewport intact. Stars visible. No transmissions detected on any frequency. Silence.",
+    "desc": "Observation Deck. Viewport intact. Stars visible. No transmissions detected on any frequency. Silence.\n\nThe quiet here allows for self-diagnostic.\n\n  |yMEMORY FRAGMENT:|n Status monitoring restored.\n  |wstatus|n — display your current stats, level, and equipment.\n  |wmissions|n — review active mission objectives.\n  |wscore|n — performance summary.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Maintenance Shaft",
     "zone": "central_station",
-    "desc": "Maintenance Shaft. Narrow. Cable bundles line the walls. Intermittent sparking from junction box 7-C.",
+    "desc": "Maintenance Shaft. Narrow. Cable bundles line the walls. Intermittent sparking from junction box 7-C.\n\nWarning indicators flash. Hostile signatures have been detected in the outer sections beyond here.\n\n  |yMEMORY FRAGMENT:|n Combat protocols partially restored.\n  |wattack <target>|n — engage a hostile. Combat runs automatically once initiated.\n  |wflee|n — disengage and retreat. Use with caution.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Data Core",
     "zone": "central_station",
-    "desc": "Data Core. Server racks: rows of blinking indicators. Most drives dormant. One terminal still draws power.",
+    "desc": "Data Core. Server racks: rows of blinking indicators. Most drives dormant. One terminal still draws power.\n\nThe |wProtocol Terminal|n hums nearby. It offers specialisation protocols for sufficiently advanced units.\n\n  |yMEMORY FRAGMENT:|n Advancement data recovered.\n  Professions unlock at |ylevel 3|n with a chassis installed.\n  |wtalk protocol terminal|n — view available specialisations.\n  |wskills|n — list unlocked abilities. |wuse <skill>|n — activate one.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Docking Port",
     "zone": "central_station",
-    "desc": "Docking Port. Airlock sealed. One vessel detected on external sensors. Hull markings: unreadable. No response to hails.",
+    "desc": "Docking Port. Airlock sealed. One vessel detected on external sensors. Hull markings: unreadable. No response to hails.\n\nThe corridor south leads to the |router zone|n. Structural damage is severe. Hostile entities patrol there.\n\n  |y⚠ WARNING:|n The outer zone is dangerous. Hostiles will attack on sight.\n  Ensure you have adequate integrity and a chassis equipped before proceeding.\n  |wsay <message>|n — broadcast to other units in your location.",
     "tags": [],
     "pvp_zone": false
   },
   {
     "key": "Collapsed Corridor",
     "zone": "outer_zone",
-    "desc": "Collapsed Corridor. Structural failure. Ceiling panels hang at angles. Path partially blocked. Proceed with caution.",
+    "desc": "Collapsed Corridor. Structural failure. Ceiling panels hang at angles. Path partially blocked. Proceed with caution.\n\nSomething moves in the shadows. Multiple exit paths branch from here — but none are safe.",
     "tags": [],
     "pvp_zone": false
   },
@@ -100,7 +100,7 @@
   {
     "key": "Debris Drift",
     "zone": "outer_zone",
-    "desc": "Debris Drift. Wreckage from unknown vessels. Twisted hull plating rotates slowly. Dangerous. Scavengers reported.",
+    "desc": "Debris Drift. Wreckage from unknown vessels. Twisted hull plating rotates slowly. Dangerous. Scavengers reported.\n\n  |r⚠ PVP ZONE:|n Combat between units is enabled here. Engage at your own risk.",
     "tags": [],
     "pvp_zone": true
   }
