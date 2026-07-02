@@ -85,3 +85,7 @@ IDLE_DISCONNECT_MSG = "\n|rSession terminated. Unit inactive for 30 minutes.|n\n
 TELNET_INTERFACES = ["0.0.0.0"]
 WEBSERVER_INTERFACES = ["0.0.0.0"]
 WEBSOCKET_CLIENT_INTERFACE = "0.0.0.0"
+
+# New characters spawn in Main Corridor, not Limbo
+START_LOCATION = '#3'
+DEFAULT_HOME = '#3'
