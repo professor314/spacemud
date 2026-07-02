@@ -78,6 +78,27 @@ class RobotCharacter(DefaultCharacter):
         # Prompt
         self.db.prompt_template = "[INT:{integrity}/{max_integrity} PWR:{power}/{max_power}]> "
 
+    def at_init(self):
+        """
+        Called every time the character is loaded from cache.
+        Ensures all Phase 2 attributes exist on pre-existing characters.
+        """
+        defaults = {
+            "level": 1, "experience": 0,
+            "integrity": 100, "max_integrity": 100,
+            "power": 50, "max_power": 50,
+            "processing": 10, "shielding": 5,
+            "repair_level": 1, "credits": 0,
+            "player_state": "active", "idle_message": "",
+            "mission_log": {}, "chassis": None, "profession": None,
+            "skills": [], "skill_cooldowns": {}, "bonus_damage": 0,
+            "pvp_kills": 0,
+            "prompt_template": "[INT:{integrity}/{max_integrity} PWR:{power}/{max_power}]> ",
+        }
+        for attr, default in defaults.items():
+            if getattr(self.db, attr, None) is None and default is not None:
+                setattr(self.db, attr, default)
+
     def at_after_move(self, source_location, **kwargs):
         """
         Called after the character successfully moves to a new location.
@@ -149,7 +170,7 @@ class RobotCharacter(DefaultCharacter):
                     from world.professions import PROFESSIONS
                     growth = PROFESSIONS[self.db.profession]["growth"]
                     for stat, value in growth.items():
-                        current = getattr(self.db, stat, 0)
+                        current = getattr(self.db, stat, 0) or 0
                         setattr(self.db, stat, current + value)
                 else:
                     # Phase 1 flat growth
@@ -188,7 +209,7 @@ class RobotCharacter(DefaultCharacter):
             return False
         # Apply stat modifiers
         for stat, value in chassis["stat_modifiers"].items():
-            current = getattr(self.db, stat, 0)
+            current = getattr(self.db, stat, 0) or 0
             setattr(self.db, stat, current + value)
         self.db.chassis = chassis_id
         self.msg(f"Chassis installed: {chassis['name']}. Systems recalibrating.")

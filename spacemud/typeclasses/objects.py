@@ -57,13 +57,13 @@ class Equipment(Artifact):
     def apply_modifiers(self, character):
         """Apply stat modifiers to the given character."""
         for stat, value in self.db.stat_modifiers.items():
-            current = getattr(character.db, stat, 0)
+            current = getattr(character.db, stat, 0) or 0
             setattr(character.db, stat, current + value)
 
     def remove_modifiers(self, character):
         """Remove stat modifiers from the given character."""
         for stat, value in self.db.stat_modifiers.items():
-            current = getattr(character.db, stat, 0)
+            current = getattr(character.db, stat, 0) or 0
             setattr(character.db, stat, current - value)
 
 
@@ -124,6 +124,41 @@ class NPC(DefaultObject):
         if self.db.role == "mission_giver":
             from utils.missions import show_available_missions
             show_available_missions(character, self)
+        elif self.db.role == "chassis_terminal":
+            if character.db.chassis:
+                character.msg("Chassis already installed.")
+                return
+            from world.chassis import CHASSIS
+            lines = ["|wAvailable chassis:|n"]
+            for cid, chassis in CHASSIS.items():
+                mods = ", ".join(f"{s}: {v:+d}" for s, v in chassis["stat_modifiers"].items())
+                lines.append(f"\n  |y{cid}|n — {chassis['name']}")
+                lines.append(f"    {chassis['description']}")
+                lines.append(f"    Stats: {mods}")
+                lines.append(f"    Passive: {chassis['passive_description']}")
+            lines.append(f"\nType |wselect <chassis>|n to install.")
+            character.msg("\n".join(lines))
+        elif self.db.role == "protocol_terminal":
+            if character.db.profession:
+                character.msg("Protocol already installed.")
+                return
+            if not character.db.chassis:
+                character.msg("Chassis required before protocol installation.")
+                return
+            if (character.db.level or 1) < 3:
+                character.msg(f"Insufficient level. Required: 3. Current: {character.db.level or 1}.")
+                return
+            from world.professions import PROFESSIONS
+            lines = ["|wAvailable protocols:|n"]
+            for pid, prof in PROFESSIONS.items():
+                growth = ", ".join(f"{s}: +{v}" for s, v in prof["growth"].items())
+                skills = ", ".join(f"Lv{lv}: {sid}" for lv, sid in prof.get("skills", {}).items())
+                lines.append(f"\n  |y{pid}|n — {prof['name']}")
+                lines.append(f"    {prof['description']}")
+                lines.append(f"    Growth: {growth}")
+                lines.append(f"    Skills: {skills or 'None'}")
+            lines.append(f"\nType |wselect <protocol>|n to install.")
+            character.msg("\n".join(lines))
 
 
 class RepairableObject(DefaultObject):

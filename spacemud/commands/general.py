@@ -72,10 +72,11 @@ class CmdRepair(Command):
 
         # Check repair level
         required = target.db.repair_level_required or 1
-        if self.caller.db.repair_level < required:
+        caller_level = self.caller.db.repair_level or 1
+        if caller_level < required:
             self.caller.msg(
                 f"Repair level insufficient. Required: {required}. "
-                f"Current: {self.caller.db.repair_level}."
+                f"Current: {caller_level}."
             )
             return
 
