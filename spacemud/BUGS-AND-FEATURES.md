@@ -39,28 +39,28 @@
   10. Reach the PVP zone
 - **Currently broken at step 5** (combat doesn't tick). Once combat is fixed, run through the full loop and verify each step works.
 
-### 7. Idle/AFK behavior improvements
-- **Priority:** Low
-- **Current state:** 30-minute idle timeout kicks players. The `idle` command sets status manually.
-- **Possible additions:**
-  - Auto-idle after 5 minutes of no input (shows idle status to other players)
-  - Warning message at 25 minutes ("Session timeout in 5 minutes. Type any command to stay connected.")
-  - The timeout warning IS configured (IDLE_TIMEOUT_WARNING = 60), but verify it actually displays
+### 6. Full playthrough verification
+- **Priority:** Medium — QA task
+- **Status:** ✅ Can now be performed. Combat is fixed, respawning works, repairs are repeatable.
+- **Task:** Connect and run through the full game loop (see steps below). Report any issues found.
 
-### 8. Web client landing page
-- **Priority:** Low — cosmetic
-- **Problem:** The default Evennia homepage shows at `play.imadestuff.com:4001` with "Welcome to Evennia!" text and links to Evennia docs. Players have to click "Play Online" to get to the actual game client.
-- **Desired behavior:** Either redirect `/` straight to `/webclient/`, or customize the homepage to be a Space MUD landing page (game description, "Play Now" button, maybe the HOW_TO_PLAY content).
+### 7. ~~Idle/AFK behavior improvements~~ ✅ RESOLVED
+- **Status:** Evennia's built-in idle handling covers this:
+  - 30-minute timeout (`IDLE_TIMEOUT = 1800`)
+  - 60-second warning before kick (`IDLE_TIMEOUT_WARNING = 60`)
+  - Custom disconnect message configured
+  - Manual `idle` command available for status setting
+- **Deployed:** Already in settings.py
 
-### 9. Connection screen improvements
-- **Priority:** Low — polish
-- **Ideas:**
-  - After `create`, auto-connect the player instead of making them type `connect` again
-  - Show a brief "what to do first" hint after connecting (or rely on the Main Corridor tutorial hint)
-  - Add `help commands` that lists all available commands in a categorized format
+### 8. ~~Web client landing page~~ ✅ FIXED
+- **Fix:** Custom `index.html` template with game description, command reference, and "Play Now" button linking to `/webclient/`. Styled in terminal green-on-black aesthetic.
+- **Deployed:** 2026-08-25
+
+### 9. ~~Connection screen improvements~~ ✅ FIXED
+- **Fix:** Added `at_post_puppet` hook that shows unit status and orientation message on connect. `help` command already lists all commands by category.
+- **Deployed:** 2026-08-25
 
 ## Notes
 
-- Bugs #1 is the top priority — without combat, most of the game is inert.
-- Features #3, #4, #5 are all related to "the world needs to be renewable, not exhaustible." Solve them together.
-- Feature #6 is a test plan, not a code change — run it after the bugs are fixed.
+- All critical bugs and high-priority features are resolved.
+- Feature #6 (full playthrough) is a test plan — run it manually to verify the complete game loop works end-to-end.
