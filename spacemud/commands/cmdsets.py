@@ -8,7 +8,7 @@ custom commands are added on top and override any defaults with the same key.
 
 from evennia import default_cmds
 
-from commands.combat import CmdAttack, CmdFlee
+from commands.combat import CmdAttack, CmdFlee, CmdQuit
 from commands.items import CmdGet, CmdDrop, CmdInventory, CmdEquip
 from commands.missions import CmdTalk, CmdComplete, CmdMissions, CmdAccept
 from commands.general import CmdStatus, CmdRepair, CmdScan, CmdHelp, CmdIdle
@@ -55,3 +55,5 @@ class RobotCmdSet(default_cmds.CharacterCmdSet):
         # Skills
         self.add(CmdUse())
         self.add(CmdSkills())
+        # Quit (with farewell message)
+        self.add(CmdQuit())

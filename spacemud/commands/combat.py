@@ -59,9 +59,11 @@ class CmdAttack(Command):
             "typeclasses.scripts.CombatScript",
             obj=self.caller,
             persistent=True,
+            autostart=False,
         )
         script.db.attacker = self.caller
         script.db.defender = target
+        script.start()
         self.caller.db.player_state = "combat"
         self.caller.msg(f"Engaging {target.name}.")
 
@@ -96,3 +98,25 @@ class CmdFlee(Command):
 
         self.caller.db.player_state = "active"
         self.caller.msg("Disengaged.")
+
+
+
+class CmdQuit(Command):
+    """
+    Disconnect from the station.
+
+    Usage:
+      quit
+      logout
+
+    Safely powers down your unit and disconnects.
+    """
+
+    key = "quit"
+    aliases = ["logout"]
+    help_category = "General"
+
+    def func(self):
+        self.caller.msg("|bSystems powering down. Unit state preserved. Reconnect at any time.|n")
+        self.caller.db.player_state = "offline"
+        self.caller.account.disconnect_session_from_account(self.session)

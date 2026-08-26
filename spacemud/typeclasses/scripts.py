@@ -221,3 +221,33 @@ class SelfRepairScript(DefaultScript):
         if unit.db.integrity < unit.db.max_integrity:
             unit.db.integrity = min(unit.db.integrity + 1, unit.db.max_integrity)
             unit.msg("Self-repair: +1 integrity.")
+
+
+class RepairDegradeScript(DefaultScript):
+    """
+    After a system is repaired, it degrades back to damaged state after
+    a set interval (default 600 seconds / 10 minutes). This makes repairs
+    repeatable, providing renewable XP sources.
+
+    Attached to a RepairableObject when it's repaired.
+    """
+
+    def at_script_creation(self):
+        self.key = "repair_degrade_script"
+        self.interval = self.obj.db.degrade_delay if self.obj and self.obj.db.degrade_delay else 600
+        self.repeats = 1
+        self.persistent = True
+
+    def at_repeat(self):
+        """Called once after the degrade delay. Marks system as damaged again."""
+        obj = self.obj
+        if not obj:
+            self.stop()
+            return
+
+        obj.db.repaired = False
+        if obj.location:
+            obj.location.msg_contents(
+                f"|y{obj.name} flickers and sparks. Systems degrading. Repair required.|n"
+            )
+        self.stop()

@@ -122,6 +122,9 @@ class CmdRepair(Command):
         self.caller.location.msg_contents(msg)
         fire_event("repair_completed", character=self.caller, target=target)
 
+        # Schedule degradation so the system becomes repairable again
+        target.scripts.add("typeclasses.scripts.RepairDegradeScript")
+
         # Check zone completion
         zone = target.location.db.zone if target.location else None
         if zone:
