@@ -113,6 +113,21 @@ class RobotCharacter(DefaultCharacter):
         if self.location:
             self.location.at_unit_enter(self)
 
+    def at_post_puppet(self, **kwargs):
+        """
+        Called after the player connects/puppets this character.
+        Shows a brief orientation message.
+        """
+        self.msg(
+            "|b--- UNIT ONLINE ---|n\n"
+            f"Designation: |w{self.name}|n | Level: {self.db.level} | "
+            f"Integrity: {self.db.integrity}/{self.db.max_integrity}\n"
+            "Type |whelp|n for commands. Type |wlook|n to scan surroundings.\n"
+            "|b--- READY ---|n"
+        )
+        # Show the room
+        self.execute_cmd("look")
+
     def return_appearance(self, looker, **kwargs):
         """
         Override to add robot-voice sensor scan header to room look output.

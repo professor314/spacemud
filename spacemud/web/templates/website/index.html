@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block titleblock %}Space MUD{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 40px auto; padding: 20px; font-family: 'Courier New', monospace; background: #0a0a0a; color: #00ff00; border: 1px solid #00ff00;">
+  <h1 style="text-align: center; color: #00ff00; border-bottom: 1px solid #00ff00; padding-bottom: 15px;">
+    STATION OS v0.1.3
+  </h1>
+
+  <p style="color: #888;">System Status: DEGRADED</p>
+  <p style="color: #888;">Memory: FRAGMENTED</p>
+  <p style="color: #888;">Active Units: UNKNOWN</p>
+
+  <hr style="border-color: #333;">
+
+  <h2 style="color: #00ccff;">What is this?</h2>
+  <p>
+    A text-based multiplayer game (MUD) set on a failing space station.
+    You are a robot. The station is breaking down. Fight corrupted drones,
+    repair systems, choose a chassis, select a profession, and explore.
+  </p>
+
+  <h2 style="color: #00ccff;">How to Play</h2>
+  <ul>
+    <li>Connect via the <a href="/webclient/" style="color: #00ff00;">web client</a> (recommended)</li>
+    <li>Or use any telnet client: <code>telnet play.imadestuff.com 4000</code></li>
+  </ul>
+
+  <h2 style="color: #00ccff;">Quick Commands</h2>
+  <table style="width: 100%; border-collapse: collapse;">
+    <tr><td style="padding: 4px; color: #fff;">look</td><td>See your surroundings</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">north/south/east/west</td><td>Move around</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">attack &lt;target&gt;</td><td>Fight hostiles</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">repair &lt;object&gt;</td><td>Fix station systems</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">status</td><td>Check your stats</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">scan</td><td>Scan current room</td></tr>
+    <tr><td style="padding: 4px; color: #fff;">help</td><td>Full command list</td></tr>
+  </table>
+
+  <hr style="border-color: #333;">
+
+  <div style="text-align: center; padding: 20px;">
+    <a href="/webclient/" style="display: inline-block; padding: 15px 40px; background: #00ff00; color: #000; text-decoration: none; font-weight: bold; font-size: 1.2em;">
+      PLAY NOW
+    </a>
+  </div>
+
+  <p style="color: #555; text-align: center; font-size: 0.8em;">
+    Built with <a href="https://www.evennia.com" style="color: #555;">Evennia</a> |
+    Source: <a href="https://github.com/professor314/spacemud" style="color: #555;">GitHub</a>
+  </p>
+</div>
+{% endblock %}
