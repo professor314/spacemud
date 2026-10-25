@@ -172,6 +172,12 @@ class RespawnScript(DefaultScript):
             delay = self.obj.db.respawn_delay
         self.interval = delay if delay is not None else 300
         self.repeats = 1           # fire exactly once
+        # Wait `interval` seconds before the (single) at_repeat call. Without
+        # this, Evennia's default start_delay=False makes at_repeat fire
+        # *immediately* when the script is added on death, respawning the
+        # hostile instantly instead of after respawn_delay seconds. This was
+        # the "hostile respawns instantly" bug.
+        self.start_delay = True
         self.persistent = True
 
     def at_repeat(self):
@@ -236,6 +242,11 @@ class RepairDegradeScript(DefaultScript):
         self.key = "repair_degrade_script"
         self.interval = self.obj.db.degrade_delay if self.obj and self.obj.db.degrade_delay else 600
         self.repeats = 1
+        # Wait the full degrade delay before the single at_repeat fires.
+        # Without start_delay=True the system would degrade back to damaged
+        # instantly on repair (Evennia start_delay defaults to False), same
+        # root cause as the RespawnScript bug.
+        self.start_delay = True
         self.persistent = True
 
     def at_repeat(self):

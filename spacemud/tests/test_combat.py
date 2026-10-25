@@ -297,3 +297,220 @@ class TestFlee(EvenniaTest):
             any("No exit vector found" in m for m in received_messages),
             f"Expected 'No exit vector found.' message, got: {received_messages}",
         )
+
+
+# ---------------------------------------------------------------------------
+# Regression tests — combat ticking & delayed-script timing (Task D)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.skipif(not _EVENNIA_AVAILABLE, reason="Evennia not available")
+class TestCombatTickRegression(EvenniaTest):
+    """
+    Regression tests for the 'combat doesn't tick' bug.
+
+    The CombatScript's first round fires immediately (start_delay=False), so
+    CmdAttack must set the combatants AND player_state='combat' BEFORE the
+    timer starts, and the started script must be a live, ticking timer.
+    """
+
+    def _make_hostile(self):
+        hostile = evennia.create_object(
+            "typeclasses.objects.Hostile",
+            key="Tick Test Sentry",
+            location=self.room1,
+        )
+        hostile.db.integrity = 50
+        hostile.db.max_integrity = 50
+        hostile.db.processing = 8
+        hostile.db.shielding = 3
+        hostile.db.xp_reward = 50
+        hostile.db.credits_reward = 10
+        hostile.db.salvage_items = []
+        hostile.db.home_location = self.room1
+        hostile.db.respawn_delay = 9999
+        return hostile
+
+    def test_attack_starts_a_live_ticking_script(self):
+        """CmdAttack must leave a started CombatScript with a 2s interval."""
+        self.char1.db.player_state = "active"
+        self.char1.db.processing = 10
+        self.char1.db.shielding = 5
+        self.char1.db.integrity = 100
+        self.char1.db.max_integrity = 100
+
+        hostile = self._make_hostile()
+
+        from commands.combat import CmdAttack
+        cmd = CmdAttack()
+        cmd.caller = self.char1
+        cmd.args = "Tick Test Sentry"
+        cmd.session = None
+        cmd.func()
+
+        scripts = [s for s in self.char1.scripts.all() if s.key == "combat_script"]
+        self.assertTrue(scripts, "No CombatScript attached after attack")
+        script = scripts[0]
+
+        # The timer must actually be running with the combat interval so it
+        # will keep ticking every 2 seconds.
+        self.assertTrue(script.is_active, "CombatScript timer is not active/ticking")
+        self.assertEqual(script.interval, 2)
+        # Combatants must be set on the script.
+        self.assertEqual(script.db.attacker, self.char1)
+        self.assertEqual(script.db.defender, hostile)
+
+        for s in scripts:
+            s.stop()
+        hostile.delete()
+        self.char1.db.player_state = "active"
+
+    def test_player_state_set_before_first_round(self):
+        """
+        player_state must be 'combat' by the time a round can run. A manual
+        at_repeat call (simulating the immediate first tick) should not error
+        and should damage the defender, proving combatants are wired up.
+        """
+        self.char1.db.player_state = "active"
+        self.char1.db.processing = 10
+        self.char1.db.shielding = 5
+        self.char1.db.integrity = 100
+        self.char1.db.max_integrity = 100
+
+        hostile = self._make_hostile()
+
+        from commands.combat import CmdAttack
+        cmd = CmdAttack()
+        cmd.caller = self.char1
+        cmd.args = "Tick Test Sentry"
+        cmd.session = None
+        cmd.func()
+
+        self.assertEqual(self.char1.db.player_state, "combat")
+
+        scripts = [s for s in self.char1.scripts.all() if s.key == "combat_script"]
+        script = scripts[0]
+
+        integrity_before = hostile.db.integrity
+        script.at_repeat()
+        self.assertLess(
+            hostile.db.integrity,
+            integrity_before,
+            "Defender took no damage — combat round did not run",
+        )
+
+        for s in scripts:
+            s.stop()
+        hostile.delete()
+        self.char1.db.player_state = "active"
+
+
+@pytest.mark.skipif(not _EVENNIA_AVAILABLE, reason="Evennia not available")
+class TestRespawnTiming(EvenniaTest):
+    """
+    Regression test for the 'hostile respawns instantly' bug.
+
+    RespawnScript must use start_delay=True so it waits respawn_delay seconds
+    before its single at_repeat fires, rather than firing immediately when
+    attached on death.
+    """
+
+    def test_respawn_script_waits_before_firing(self):
+        """A freshly-attached RespawnScript must not have fired yet (start_delay)."""
+        hostile = evennia.create_object(
+            "typeclasses.objects.Hostile",
+            key="Respawn Test Bot",
+            location=self.room1,
+        )
+        hostile.db.integrity = 60
+        hostile.db.max_integrity = 60
+        hostile.db.home_location = self.room1
+        hostile.db.respawn_delay = 9999  # long enough that it can't fire during the test
+
+        # Simulate death: schedule respawn then remove from world.
+        hostile.scripts.add("typeclasses.scripts.RespawnScript")
+        hostile.location = None
+
+        scripts = [s for s in hostile.scripts.all() if s.key == "respawn_script"]
+        self.assertTrue(scripts, "RespawnScript was not attached on death")
+        script = scripts[0]
+
+        # start_delay must be True so at_repeat is deferred by respawn_delay.
+        self.assertTrue(
+            script.start_delay,
+            "RespawnScript.start_delay is False — hostile would respawn instantly",
+        )
+        self.assertEqual(script.interval, 9999)
+        self.assertEqual(script.repeats, 1)
+        # Because start_delay is True and interval is huge, the hostile must
+        # still be out of the world (location None), i.e. it has NOT respawned.
+        self.assertIsNone(
+            hostile.location,
+            "Hostile respawned instantly instead of waiting respawn_delay",
+        )
+
+        script.stop()
+        hostile.delete()
+
+    def test_respawn_at_repeat_restores_hostile(self):
+        """When at_repeat finally fires, the hostile is restored to its home at full integrity."""
+        hostile = evennia.create_object(
+            "typeclasses.objects.Hostile",
+            key="Respawn Restore Bot",
+            location=self.room1,
+        )
+        hostile.db.integrity = 0
+        hostile.db.max_integrity = 60
+        hostile.db.home_location = self.room1
+        hostile.db.respawn_delay = 9999
+
+        hostile.scripts.add("typeclasses.scripts.RespawnScript")
+        hostile.location = None
+
+        scripts = [s for s in hostile.scripts.all() if s.key == "respawn_script"]
+        script = scripts[0]
+
+        # Manually fire the single repeat (simulating the delay elapsing).
+        script.at_repeat()
+
+        self.assertEqual(hostile.db.integrity, 60)
+        self.assertEqual(hostile.location, self.room1)
+
+        hostile.delete()
+
+
+@pytest.mark.skipif(not _EVENNIA_AVAILABLE, reason="Evennia not available")
+class TestRepairDegradeTiming(EvenniaTest):
+    """
+    Regression test for the RepairDegradeScript instant-degrade bug (same
+    root cause as the respawn bug). It must use start_delay=True so a repaired
+    system degrades after degrade_delay seconds, not immediately.
+    """
+
+    def test_degrade_script_waits_before_firing(self):
+        repairable = evennia.create_object(
+            "typeclasses.objects.RepairableObject",
+            key="Degrade Test Panel",
+            location=self.room1,
+        )
+        repairable.db.repaired = True
+        repairable.db.degrade_delay = 9999
+
+        repairable.scripts.add("typeclasses.scripts.RepairDegradeScript")
+
+        scripts = [s for s in repairable.scripts.all() if s.key == "repair_degrade_script"]
+        self.assertTrue(scripts, "RepairDegradeScript was not attached")
+        script = scripts[0]
+
+        self.assertTrue(
+            script.start_delay,
+            "RepairDegradeScript.start_delay is False — system would degrade instantly",
+        )
+        # The system must still be repaired (has not degraded yet).
+        self.assertTrue(
+            repairable.db.repaired,
+            "System degraded instantly instead of waiting degrade_delay",
+        )
+
+        script.stop()
+        repairable.delete()

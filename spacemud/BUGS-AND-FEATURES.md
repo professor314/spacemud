@@ -3,8 +3,14 @@
 ## Bugs (Broken)
 
 ### 1. ~~Combat doesn't tick~~ ✅ FIXED
-- **Fix:** `_start_combat()` now uses `autostart=False` when creating the CombatScript, sets `db.attacker`/`db.defender`, then calls `script.start()`. This prevents the race condition where `at_repeat()` fires before combatants are set.
-- **Deployed:** 2026-08-25
+- **Fix (2026-08-25):** `_start_combat()` uses `autostart=False`, sets
+  `db.attacker`/`db.defender`, then calls `script.start()`.
+- **Additional fix (2026-09-29):** hardened `_start_combat()` ordering — set the
+  combatants AND `player_state="combat"` *before* `script.start()`, and start the
+  timer with explicit `interval=2, start_delay=False`. The CombatScript's first
+  round fires immediately (Evennia `start_delay` defaults False), so state must be
+  set beforehand. Added regression tests (`TestCombatTickRegression`).
+- **Verified:** 78/78 tests pass under Python 3.12 + Evennia 6.0.0.
 
 ### 2. ~~No quit confirmation message~~ ✅ FIXED
 - **Fix:** Custom `CmdQuit` command added with farewell message: "Systems powering down. Unit state preserved. Reconnect at any time."
@@ -12,9 +18,15 @@
 
 ## Feature Requests
 
-### 3. ~~Hostile respawning~~ ✅ IMPLEMENTED (was already in code)
-- **Status:** Already working. `RespawnScript` fires after `respawn_delay` seconds (90-150s per hostile). Hostiles are removed from world on death and reappear at home location when timer fires.
-- **Verified:** Code in `typeclasses/scripts.py` (RespawnScript) + `typeclasses/objects.py` (Hostile.at_death triggers it)
+### 3. ~~Hostile respawning~~ ✅ FIXED (was respawning instantly)
+- **Bug (found 2026-09-29):** `RespawnScript` set `interval=respawn_delay`,
+  `repeats=1`, `persistent=True` but NOT `start_delay=True`. Evennia's `start_delay`
+  defaults to `False`, so the single `at_repeat` fired *immediately* when the script
+  was attached on death — hostiles respawned instantly instead of after 90–150 s.
+- **Fix:** set `self.start_delay = True` in `RespawnScript.at_script_creation`.
+  `RepairDegradeScript` had the identical bug (repaired systems degraded instantly)
+  and was fixed the same way.
+- **Verified:** `TestRespawnTiming` + `TestRepairDegradeTiming` pass (78/78 suite).
 
 ### 4. ~~Repairable systems need to be per-character or repeatable~~ ✅ FIXED
 - **Fix:** Option B implemented — `RepairDegradeScript` makes repaired systems degrade back to damaged after 10 minutes (configurable via `db.degrade_delay`). Triggered automatically when any system is repaired.

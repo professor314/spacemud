@@ -54,7 +54,19 @@ class CmdAttack(Command):
         self.caller.msg("No valid target by that designation.")
 
     def _start_combat(self, target):
-        """Start a combat script between caller and target."""
+        """Start a combat script between caller and target.
+
+        Order matters here. The CombatScript has ``start_delay=False`` so its
+        first ``at_repeat`` round fires *immediately* when the timer starts.
+        We therefore (1) create the script with ``autostart=False``,
+        (2) set the combatants and the caller's ``player_state`` *before*
+        starting the timer, then (3) start it with an explicit ``interval``
+        and ``start_delay`` so the timer is unambiguously configured (a
+        persistent script created with ``autostart=False`` will not otherwise
+        have its timer running). If any of this happened out of order the
+        first round could run before combatants/state were set, which is the
+        original "combat doesn't tick" bug.
+        """
         script = create_script(
             "typeclasses.scripts.CombatScript",
             obj=self.caller,
@@ -63,8 +75,11 @@ class CmdAttack(Command):
         )
         script.db.attacker = self.caller
         script.db.defender = target
-        script.start()
         self.caller.db.player_state = "combat"
+        # Explicitly (re)configure and start the timer. Passing interval and
+        # start_delay makes the ticking behaviour independent of any prior
+        # timer state left over from create_script(autostart=False).
+        script.start(interval=2, start_delay=False)
         self.caller.msg(f"Engaging {target.name}.")
 
 
